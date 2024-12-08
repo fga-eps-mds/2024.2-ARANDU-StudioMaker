@@ -1,25 +1,30 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
   Param,
+  Patch,
+  Post,
   Put,
   Req,
   UnauthorizedException,
-  Delete,
-  Patch,
-  NotFoundException,
 } from '@nestjs/common';
-import { PointService } from './point.service';
+import { ApiBody } from '@nestjs/swagger';
 import { Request } from 'express';
 import { CreateStartPointDto } from './dtos/create-start-point.dto';
+import { ManageStartPointJourneyDTO } from './dtos/manageStartPointJourney.dto';
 import { UpdatePointOrderDto } from './dtos/update-point.dto';
+import { PointService } from './point.service';
 
 @Controller('points')
 export class PointController {
   constructor(private readonly pointService: PointService) {}
 
+  @ApiBody({
+    type: CreateStartPointDto,
+  })
   @Post()
   async create(
     @Body() createStartPointDto: CreateStartPointDto,
@@ -50,6 +55,9 @@ export class PointController {
     return this.pointService.findById(id);
   }
 
+  @ApiBody({
+    type: CreateStartPointDto,
+  })
   @Put(':id')
   async update(
     @Param('id') id: string,
@@ -63,10 +71,13 @@ export class PointController {
     return this.pointService.delete(id);
   }
 
+  @ApiBody({
+    type: ManageStartPointJourneyDTO,
+  })
   @Patch(':id/add-journey')
   async addJourneyToPoint(
     @Param('id') id: string,
-    @Body() body: { journeyId: string },
+    @Body() body: ManageStartPointJourneyDTO,
   ) {
     return this.pointService.addJourneyToPoint(id, body.journeyId);
   }
@@ -83,6 +94,9 @@ export class PointController {
     }
   }
 
+  @ApiBody({
+    type: UpdatePointOrderDto,
+  })
   @Patch('/update-point-order')
   async updatePointOrder(
     @Body()

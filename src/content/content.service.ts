@@ -1,9 +1,9 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { Content } from './content.schema';
 import { Trail } from '../trail/trail.schema';
 import { TrailService } from '../trail/trail.service';
+import { Content } from './content.schema';
 import { ContentInterface } from './dtos/update-content-order.dto';
 
 @Injectable()
