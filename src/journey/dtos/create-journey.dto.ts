@@ -18,7 +18,7 @@ export class CreateJourneyDto {
   description: string;
 
   @ApiProperty({
-    example: 'id-do-point',
+    example: 'id-do-start-point',
     required: false
   })
   @IsOptional()
