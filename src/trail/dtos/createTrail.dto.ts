@@ -1,28 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
 
-export class CreateContentDto {
+export class CreateTrailDto {
   @ApiProperty({
-    example: 'Título',
+    example: 'Nome da Trilha',
     required: true
   })
   @IsString()
   @IsNotEmpty()
-  title: string;
+  name: string;
 
   @ApiProperty({
-    example: 'Conteúdo',
-    required: true
-  })
-  @IsString()
-  @IsNotEmpty()
-  content: string;
-
-  @ApiProperty({
-    example: 'id-da-trilha',
+    example: 'id-da-jornada',
     required: true
   })
   @IsMongoId()
   @IsNotEmpty()
-  trailId: string;
+  journeyId: string;
 }

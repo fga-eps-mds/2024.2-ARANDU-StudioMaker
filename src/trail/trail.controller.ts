@@ -1,24 +1,32 @@
 import {
-  Controller,
-  Post,
-  Get,
-  Put,
-  Delete,
-  Param,
   Body,
-  NotFoundException,
+  Controller,
+  Delete,
+  Get,
   Logger,
+  NotFoundException,
+  Param,
   Patch,
+  Post,
+  Put,
 } from '@nestjs/common';
-import { TrailService } from './trail.service';
+import { ApiBody } from '@nestjs/swagger';
 import { UpdateTrailsDtos } from 'src/trail/dtos/updateTrailsDtos';
+import { CreateTrailDto } from './dtos/createTrail.dto';
+import { ManageTrailContentDTO } from './dtos/manageTrailContent.dto';
+import { TrailService } from './trail.service';
 
 @Controller('trails')
 export class TrailController {
   constructor(private readonly trailService: TrailService) {}
   private readonly logger = new Logger(TrailController.name);
+
+  @ApiBody({
+    type: CreateTrailDto,
+    description: 'Estrutura para criação de trilhas',
+  })
   @Post()
-  async createTrail(@Body() body: { name: string; journeyId: string }) {
+  async createTrail(@Body() body: CreateTrailDto) {
     const { name, journeyId } = body;
 
     if (!journeyId) {
@@ -51,10 +59,14 @@ export class TrailController {
     return this.trailService.updateTrail(id, updateData);
   }
 
+  @ApiBody({
+    type: ManageTrailContentDTO,
+    description: 'Estrutura para adição de conteúdos às trilhas',
+  })
   @Put(':id/addContent')
   async addContentToTrail(
     @Param('id') trailId: string,
-    @Body() body: { contentId: string },
+    @Body() body: ManageTrailContentDTO,
   ) {
     const { contentId } = body;
     if (!contentId) {
@@ -63,10 +75,14 @@ export class TrailController {
     return this.trailService.addContentToTrail(trailId, contentId);
   }
 
+  @ApiBody({
+    type: ManageTrailContentDTO,
+    description: 'Estrutura para remoção de conteúdos das trilhas',
+  })
   @Put(':id/removeContent')
   async removeContentFromTrail(
     @Param('id') trailId: string,
-    @Body() body: { contentId: string },
+    @Body() body: ManageTrailContentDTO,
   ) {
     const { contentId } = body;
     return this.trailService.removeContentFromTrail(trailId, contentId);
@@ -78,6 +94,9 @@ export class TrailController {
     return { message: 'Trail deleted successfully' };
   }
 
+  @ApiBody({
+    type: UpdateTrailsDtos,
+  })
   @Patch('update-trail-order')
   async updateTrailOrder(@Body() trailsDto: UpdateTrailsDtos) {
     this.logger.log(
