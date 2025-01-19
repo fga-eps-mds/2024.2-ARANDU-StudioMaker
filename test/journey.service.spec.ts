@@ -25,10 +25,6 @@ describe('JourneyService', () => {
     findById: jest.fn(),
   };
 
-  const mockSubjectService = {
-    addJourneyToSubject: jest.fn(),
-  };
-
   const mockHttpService = {} as HttpService;
 
   const mockJourneyInstance = {
