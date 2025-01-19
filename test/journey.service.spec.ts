@@ -1,12 +1,12 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { getModelToken } from '@nestjs/mongoose';
-import { NotFoundException } from '@nestjs/common';
-import { JourneyService } from 'src/journey/journey.service';
-import { PointService } from 'src/start_point/point.service';
 import { HttpService } from '@nestjs/axios';
+import { NotFoundException } from '@nestjs/common';
+import { getModelToken } from '@nestjs/mongoose';
+import { Test, TestingModule } from '@nestjs/testing';
 import { Types } from 'mongoose';
 import { CreateJourneyDto } from 'src/journey/dtos/create-journey.dto';
 import { JourneyInterface } from 'src/journey/dtos/updateJourneyOrder';
+import { JourneyService } from 'src/journey/journey.service';
+import { SubjectService } from '../src/subject/subject.service';
 
 describe('JourneyService', () => {
   let service: JourneyService;
@@ -21,12 +21,8 @@ describe('JourneyService', () => {
     bulkWrite: jest.fn(),
   };
 
-  const mockPointModel = {
+  const mockSubjectModel = {
     findById: jest.fn(),
-  };
-
-  const mockPointService = {
-    addJourneyToPoint: jest.fn(),
   };
 
   const mockHttpService = {} as HttpService;
@@ -48,12 +44,12 @@ describe('JourneyService', () => {
           },
         },
         {
-          provide: getModelToken('Point'),
-          useValue: mockPointModel,
+          provide: getModelToken('Subject'),
+          useValue: mockSubjectModel,
         },
         {
-          provide: PointService,
-          useValue: mockPointService,
+          provide: SubjectService,
+          useValue: mockSubjectModel,
         },
         {
           provide: HttpService,
@@ -70,19 +66,19 @@ describe('JourneyService', () => {
   });
 
   describe('create', () => {
-    it('should throw NotFoundException if point does not exist', async () => {
+    it('should throw NotFoundException if subject does not exist', async () => {
       const createJourneyDto: CreateJourneyDto = {
         title: 'Test Journey',
         description: 'Test Description',
-        pointId: 'invalid-point-id',
+        subjectId: 'invalid-subject-id',
       };
 
-      mockPointModel.findById.mockReturnValueOnce({
+      mockSubjectModel.findById.mockReturnValueOnce({
         exec: jest.fn().mockResolvedValue(null),
       });
 
       await expect(
-        service.create(createJourneyDto, createJourneyDto.pointId),
+        service.create(createJourneyDto, createJourneyDto.subjectId),
       ).rejects.toThrow(NotFoundException);
     });
   });
@@ -100,16 +96,16 @@ describe('JourneyService', () => {
     });
   });
 
-  describe('findByPointId', () => {
-    it('should return journeys by point ID', async () => {
+  describe('findBySubjectId', () => {
+    it('should return journeys by subject ID', async () => {
       const journeys = [{ _id: 'journey-id', title: 'Test Journey' }];
       mockJourneyModel.find.mockReturnValueOnce({
         exec: jest.fn().mockResolvedValue(journeys),
       });
 
-      const result = await service.findByPointId('point-id');
+      const result = await service.findBySubjectId('subject-id');
       expect(result).toEqual(journeys);
-      expect(mockJourneyModel.find).toHaveBeenCalledWith({ point: 'point-id' });
+      expect(mockJourneyModel.find).toHaveBeenCalledWith({ subject: 'subject-id' });
     });
   });
 

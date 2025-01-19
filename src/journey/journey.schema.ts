@@ -4,7 +4,7 @@ export const JourneySchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
     description: { type: String },
-    point: { type: mongoose.Schema.Types.ObjectId, ref: 'Point' },
+    subject: { type: mongoose.Schema.Types.ObjectId, ref: 'Subject' },
     trails: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Trail' }],
     order: { type: Number, default: 0 },
   },
@@ -14,7 +14,7 @@ export const JourneySchema = new mongoose.Schema(
 export interface Journey extends mongoose.Document {
   title: string;
   description?: string;
-  point: mongoose.Schema.Types.ObjectId;
+  subject: mongoose.Schema.Types.ObjectId;
   trails?: mongoose.Types.ObjectId[];
   order: { type: number; default: 0 };
 }
