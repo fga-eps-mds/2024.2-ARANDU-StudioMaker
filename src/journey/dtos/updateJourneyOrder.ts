@@ -1,7 +1,7 @@
 export interface JourneyInterface {
   _id: string;
   title?: string;
-  point?: string;
+  subject?: string;
   createdAt?: string;
   updatedAt?: string;
   __v?: string;

@@ -27,22 +27,22 @@ export class JourneyController {
   })
   @Post()
   async create(@Body() body: CreateJourneyDto) {
-    const pointId = body.pointId;
+    const subjectId = body.subjectId;
 
-    if (!pointId) {
-      throw new NotFoundException('Point ID not provided in body');
+    if (!subjectId) {
+      throw new NotFoundException('Subject ID not provided in body');
     }
 
-    return this.journeyService.create(body, pointId);
+    return this.journeyService.create(body, subjectId);
   }
   @Get()
   async findAll() {
     return this.journeyService.findAll();
   }
 
-  @Get('point/:id')
-  async findByPointId(@Param('id') pointId: string) {
-    return this.journeyService.findByPointId(pointId);
+  @Get('subjects/:id')
+  async findBySubjectId(@Param('id') subjectId: string) {
+    return this.journeyService.findBySubjectId(subjectId);
   }
 
   @Get(':id')
