@@ -18,10 +18,10 @@ export class CreateJourneyDto {
   description: string;
 
   @ApiProperty({
-    example: 'id-do-start-point',
+    example: 'id-da-disciplina',
     required: false
   })
   @IsOptional()
   @IsMongoId()
-  pointId?: string;
+  subjectId?: string;
 }

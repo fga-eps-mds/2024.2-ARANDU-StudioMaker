@@ -2,11 +2,11 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { Journey } from './journey.schema';
+import { Subject } from '../subject/subject.schema';
+import { SubjectService } from '../subject/subject.service';
 import { CreateJourneyDto } from './dtos/create-journey.dto';
-import { Point } from '../start_point/point.schema';
-import { PointService } from 'src/start_point/point.service';
 import { JourneyInterface } from './dtos/updateJourneyOrder';
+import { Journey } from './journey.schema';
 
 @Injectable()
 export class JourneyService {
@@ -14,30 +14,28 @@ export class JourneyService {
 
   constructor(
     @InjectModel('Journey') private readonly journeyModel: Model<Journey>,
-    @InjectModel('Point') private readonly pointModel: Model<Point>,
-    private readonly pointService: PointService,
+    @InjectModel('Subject') private readonly subjectModel: Model<Subject>,
+    private readonly subjectService: SubjectService,
     private readonly httpService: HttpService,
   ) {}
 
   async create(
     createJourneyDto: CreateJourneyDto,
-    pointId: string,
+    subjectId: string,
   ): Promise<Journey> {
-    const pointExist = await this.pointModel.findById(pointId).exec();
-    if (!pointExist) {
-      throw new NotFoundException(`Point with ID ${pointId} not found`);
-    }
+    const subjectExist = await this.subjectModel.findById(subjectId).exec();
+    if (!subjectExist) throw new NotFoundException(`Subject with ID ${subjectId} not found`);
 
     const newJourney = new this.journeyModel({
       ...createJourneyDto,
-      point: pointId,
-      order: pointExist.journeys.length + 1,
+      subject: subjectId,
+      order: subjectExist.journeys.length + 1,
     });
 
     const savedJourney = await newJourney.save();
 
-    await this.pointService.addJourneyToPoint(
-      pointId,
+    await this.subjectService.addJourneyToSubject(
+      subjectId,
       savedJourney._id.toString(),
     );
 
@@ -48,8 +46,8 @@ export class JourneyService {
     return this.journeyModel.find().exec();
   }
 
-  async findByPointId(pointId: string): Promise<Journey[]> {
-    return this.journeyModel.find({ point: pointId }).exec();
+  async findBySubjectId(subjectId: string): Promise<Journey[]> {
+    return this.journeyModel.find({ subject: subjectId }).exec();
   }
 
   async findById(id: string): Promise<Journey> {
