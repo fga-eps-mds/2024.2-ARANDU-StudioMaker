@@ -1,12 +1,12 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { HttpModule } from '@nestjs/axios';
-import { ContentModule } from './content/content.module';
 import * as Joi from 'joi';
+import { ContentModule } from './content/content.module';
 import { JourneyModule } from './journey/journey.module';
+import { SubjectModule } from './subject/subject.module';
 import { TrailModule } from './trail/trail.module';
-import { PointModule } from './start_point/point.module';
 
 @Module({
   imports: [
@@ -25,10 +25,10 @@ import { PointModule } from './start_point/point.module';
       inject: [ConfigService],
     }),
     HttpModule,
+    SubjectModule,
     ContentModule,
     JourneyModule,
-    TrailModule,
-    PointModule,
+    TrailModule
   ],
   controllers: [],
   providers: [],

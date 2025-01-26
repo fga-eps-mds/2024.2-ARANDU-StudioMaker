@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
-import { JourneyController } from 'src/journey/journey.controller';
-import { JourneyService } from 'src/journey/journey.service';
+import { Test, TestingModule } from '@nestjs/testing';
 import { CreateJourneyDto } from 'src/journey/dtos/create-journey.dto';
 import { UpdateJourneysOrderDto } from 'src/journey/dtos/updateJourneyOrder';
+import { JourneyController } from 'src/journey/journey.controller';
+import { JourneyService } from 'src/journey/journey.service';
 
 describe('JourneyController', () => {
   let controller: JourneyController;
@@ -13,7 +13,7 @@ describe('JourneyController', () => {
   const mockJourneyService = {
     create: jest.fn(),
     findAll: jest.fn(),
-    findByPointId: jest.fn(),
+    findBySubjectId: jest.fn(),
     findById: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
@@ -43,7 +43,7 @@ describe('JourneyController', () => {
   describe('create', () => {
     it('should create a journey', async () => {
       const createJourneyDto: CreateJourneyDto = {
-        pointId: 'point-id',
+        subjectId: 'subject-id',
         title: 'asd',
         description: 'asad',
       };
@@ -54,13 +54,13 @@ describe('JourneyController', () => {
       expect(await controller.create(createJourneyDto)).toEqual(result);
       expect(mockJourneyService.create).toHaveBeenCalledWith(
         createJourneyDto,
-        createJourneyDto.pointId,
+        createJourneyDto.subjectId,
       );
     });
 
-    it('should throw NotFoundException if pointId is missing', async () => {
+    it('should throw NotFoundException if subjectId is missing', async () => {
       const createJourneyDto: CreateJourneyDto = {
-        pointId: '',
+        subjectId: '',
         title: 'asdasd',
         description: 'asdasd',
       };
@@ -82,14 +82,14 @@ describe('JourneyController', () => {
     });
   });
 
-  describe('findByPointId', () => {
-    it('should return journeys by pointId', async () => {
+  describe('findBysubjectId', () => {
+    it('should return journeys by subjectId', async () => {
       const result = [{ id: 'journey-id' }];
 
-      mockJourneyService.findByPointId.mockResolvedValue(result);
+      mockJourneyService.findBySubjectId.mockResolvedValue(result);
 
-      expect(await controller.findByPointId('point-id')).toEqual(result);
-      expect(mockJourneyService.findByPointId).toHaveBeenCalledWith('point-id');
+      expect(await controller.findBySubjectId('subject-id')).toEqual(result);
+      expect(mockJourneyService.findBySubjectId).toHaveBeenCalledWith('subject-id');
     });
   });
 
@@ -115,7 +115,7 @@ describe('JourneyController', () => {
   describe('update', () => {
     it('should update a journey and return the updated journey', async () => {
       const updateJourneyDto: CreateJourneyDto = {
-        pointId: 'point-id',
+        subjectId: 'subject-id',
         title: 'asdasd',
         description: 'asdsad',
       };
