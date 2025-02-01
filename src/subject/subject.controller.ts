@@ -9,7 +9,7 @@ import { SubjectService } from "./subject.service";
 
 @Controller('subjects')
 export class SubjectController {
-    constructor(private readonly subjectService: SubjectService) {}
+    constructor(private readonly subjectService: SubjectService) { }
 
     @ApiBody({
         type: CreateSubjectDTO,
@@ -74,7 +74,7 @@ export class SubjectController {
             return await this.subjectService.getJourneysBySubjectId(subjectId);
         } catch (error) {
             if (error instanceof NotFoundException) throw new NotFoundException(error.message);
-            
+
             throw error;
         }
     }
@@ -83,7 +83,7 @@ export class SubjectController {
         type: UpdateSubjectOrderDto,
     })
     @Patch('/order')
-    async updatePointOrder(
+    async updateSubjectOrder(
         @Body()
         body: UpdateSubjectOrderDto,
     ) {
