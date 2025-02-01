@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import * as Joi from 'joi';
 import { ContentModule } from './content/content.module';
 import { JourneyModule } from './journey/journey.module';
+import { KnowledgeModule } from './knowledge/knowledge.module';
 import { SubjectModule } from './subject/subject.module';
 import { TrailModule } from './trail/trail.module';
 
@@ -25,6 +26,7 @@ import { TrailModule } from './trail/trail.module';
       inject: [ConfigService],
     }),
     HttpModule,
+    KnowledgeModule,
     SubjectModule,
     ContentModule,
     JourneyModule,

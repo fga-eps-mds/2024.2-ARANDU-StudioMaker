@@ -17,7 +17,7 @@ export class SubjectService {
         @InjectModel('Subject')
         private readonly subjectModel: Model<Subject>,
         private readonly httpService: HttpService
-    ) {}
+    ) { }
 
     async create(
         createSubjectDTO: CreateSubjectDTO,
@@ -25,7 +25,7 @@ export class SubjectService {
     ): Promise<Subject> {
 
         const userId = await this.validateTokenAndGetUserId(token);
-        
+
         if (!userId) {
             this.logger.error(`Invalid token: ${token}`);
             throw new UnauthorizedException('Invalid Token!');
@@ -70,7 +70,7 @@ export class SubjectService {
 
     async findById(id: string): Promise<Subject | undefined> {
         const subject = await this.subjectModel.findById(id).exec();
-        
+
         if (!subject) throw new NotFoundException(`Subject with ID ${id} not found`);
 
         return subject;
@@ -99,7 +99,7 @@ export class SubjectService {
             .exec();
 
         if (!subject) throw new NotFoundException(`Subject with ID ${id} not found`);
-        
+
         return subject;
     }
 
@@ -107,7 +107,7 @@ export class SubjectService {
         const subject = await this.subjectModel.findByIdAndDelete(id).exec();
 
         if (!subject) throw new NotFoundException(`Subject with ID ${id} not found`);
-        
+
         this.logger.log(`Deleted subject!`);
 
         return subject;
@@ -115,31 +115,31 @@ export class SubjectService {
 
     async addJourneyToSubject(subjectId: string, journeyId: string): Promise<Subject> {
         const subject = await this.subjectModel.findById(subjectId).exec();
-        
+
         if (!subject) throw new NotFoundException(`Subject with ID ${subjectId} not found`);
 
         const objectId = new Types.ObjectId(journeyId);
 
-        subject.journeys = ( subject.journeys ? subject.journeys : [] )
+        subject.journeys = (subject.journeys ? subject.journeys : [])
 
-        if ( !subject.journeys.includes(objectId) )  subject.journeys.push(objectId);
+        if (!subject.journeys.includes(objectId)) subject.journeys.push(objectId);
 
         return subject.save();
     }
 
     async getJourneysBySubjectId(subjectId: string): Promise<Types.ObjectId[]> {
         const subject = await this.subjectModel.findById(subjectId).exec();
-        
+
         if (!subject) throw new NotFoundException(`Subject with ID ${subjectId} not found`);
-        
+
         return subject.journeys || [];
     }
 
-    async updateOrder(journeys: UpdateSubjectOrderInterface[]) {
-        const bulkOperations = journeys.map((trail) => ({
+    async updateOrder(subjects: UpdateSubjectOrderInterface[]) {
+        const bulkOperations = subjects.map((trail) => ({
             updateOne: {
-            filter: { _id: new Types.ObjectId(trail._id) },
-            update: { $set: { order: trail.order } },
+                filter: { _id: new Types.ObjectId(trail._id) },
+                update: { $set: { order: trail.order } },
             },
         }));
 
